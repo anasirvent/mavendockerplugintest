@@ -9,16 +9,18 @@
 
 	<name>test</name>
 	<url>http://maven.apache.org</url>
+	
+	<parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.6.RELEASE</version>
+        <relativePath/>
+    </parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<activiti.version>6.0.0</activiti.version>
-		<spring.version>1.5.6.RELEASE</spring.version>
-		<spring.core.version>4.3.10.RELEASE</spring.core.version>
-		<spring.kafka.version>1.1.6.RELEASE</spring.kafka.version>
-		<snakeyaml.version>1.17</snakeyaml.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.main.class>test.test.App</project.main.class>
@@ -29,50 +31,39 @@
 	</properties>
 
 
-<dependencies>
+	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka</artifactId>
-			<version>${spring.kafka.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
-   			<groupId>org.json</groupId>
-   			<artifactId>json</artifactId>
-   			<version>20080701</version>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20080701</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<version>${spring.version}</version>
 			<artifactId>spring-boot</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-logging</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>${spring.core.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
@@ -80,12 +71,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.yaml</groupId>
-			<artifactId>snakeyaml</artifactId>
-			<version>${snakeyaml.version}</version>
-			<scope>runtime</scope>
-		</dependency>
+		
 	</dependencies>
 
 	<build>
@@ -93,7 +79,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.version}</version>
 			</plugin>
 
 			<plugin>
@@ -128,8 +113,8 @@
 					</execution>
 				</executions>
 			</plugin>
-						
-			
+
+
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
@@ -138,21 +123,31 @@
 					<images>
 						<image>
 							<name>springboot/test</name>
-							<build> 
+							<build>
 								<dockerFile>Dockerfile</dockerFile>
-                                <assembly>
-                                    <descriptorRef>artifact-with-dependencies</descriptorRef>
-                                </assembly>
+								<assembly>
+									<descriptorRef>artifact-with-dependencies</descriptorRef>
+								</assembly>
 							</build>
 						</image>
 					</images>
 				</configuration>
-				
+
 				<executions>
 					<execution>
-						<id>docker-build</id>
+						<id>start</id>
+						<phase>pre-integration-test</phase>
 						<goals>
+							<!-- "build" should be used to create the images with the artifact -->
 							<goal>build</goal>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stop</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
 						</goals>
 					</execution>
 				</executions>
