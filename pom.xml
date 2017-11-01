@@ -15,8 +15,9 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<activiti.version>6.0.0</activiti.version>
-		<spring.version>1.5.8.RELEASE</spring.version>
-		<spring.core.version>5.0.0.RELEASE</spring.core.version>
+		<spring.version>1.5.6.RELEASE</spring.version>
+		<spring.core.version>4.3.10.RELEASE</spring.core.version>
+		<spring.kafka.version>1.1.6.RELEASE</spring.kafka.version>
 		<snakeyaml.version>1.17</snakeyaml.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -28,19 +29,18 @@
 	</properties>
 
 
-
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
+<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+			<version>${spring.kafka.version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -49,9 +49,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20080701</version>
+   			<groupId>org.json</groupId>
+   			<artifactId>json</artifactId>
+   			<version>20080701</version>
 		</dependency>
 
 		<dependency>
@@ -80,8 +80,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>${snakeyaml.version}</version>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
-
 
 	<build>
 		<plugins>
@@ -90,6 +95,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring.version}</version>
 			</plugin>
+
 			<plugin>
 				<!-- Build an executable JAR -->
 				<groupId>org.apache.maven.plugins</groupId>
@@ -109,7 +115,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.0.0</version>
 				<executions>
 					<execution>
 						<id>copy-dependencies</id>
@@ -123,7 +128,8 @@
 					</execution>
 				</executions>
 			</plugin>
-
+						
+			
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
@@ -132,7 +138,7 @@
 					<images>
 						<image>
 							<name>springboot/test</name>
-							<build> 
+							<build> 
 								<dockerFile>Dockerfile</dockerFile>
                                 <assembly>
                                     <descriptorRef>artifact-with-dependencies</descriptorRef>
@@ -151,7 +157,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 	</build>
 </project>
