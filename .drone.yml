@@ -1,6 +1,8 @@
 pipeline:
   test:
     image: maven:alpine
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
      - mvn clean test
      - mvn clean install
