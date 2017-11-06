@@ -3,9 +3,9 @@ pipeline:
     image: maven:alpine
     environment:
       - DOCKER_API_VERSION=1.32
-      - DOCKER_HOST=unix:///var/run/docker.sock"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
+     - "export DOCKER_HOST=unix:///var/run/docker.sock"
      - mvn clean test
      - mvn clean install
